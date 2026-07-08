@@ -1,33 +1,43 @@
 {
   "name": "Agentech_Inc_SDK",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "level_format": "L<integer>.<single decimal>",
+  "level_sequence": [
+    "L0.0",
+    "L0.5",
+    "L1.0",
+    "L1.5",
+    "L2.0",
+    "L2.5"
+  ],
   "cards": {
     "total": 13,
-    "L0": 1,
+    "L0.0": 1,
     "L0.5": 12
   },
   "packages": {
-    "L0": "L0/",
+    "L0.0": "L0.0/",
     "L0.5": "L0.5/"
   },
   "structure": {
-    "L0": {
-      "manifest": "L0/manifest.json",
-      "cards": "L0/cards/",
-      "collections": "L0/collections/"
+    "L0.0": {
+      "manifest": "L0.0/manifest.json",
+      "cards": "L0.0/cards/"
     },
     "L0.5": {
       "manifest": "L0.5/manifest.json",
-      "cards": "L0.5/cards/",
-      "collections": "L0.5/collections/"
-    },
-    "docs": "docs/"
+      "cards": {
+        "en": "L0.5/cards/en/",
+        "zh": "L0.5/cards/zh/"
+      }
+    }
   },
   "entrypoints": {
-    "L0 package": "L0/",
-    "L0 bilingual collection": "L0/collections/bilingual.md",
-    "L0.5 bilingual file": "L0.5.md",
-    "L0.5 bilingual collection": "L0.5/collections/bilingual.md",
-    "all bilingual cards": "docs/all_cards_bilingual.md"
+    "L0.0 package": "L0.0/",
+    "L0.5 package": "L0.5/",
+    "L0.0 English card": "L0.0/cards/get_battery_status.en.md",
+    "L0.0 Chinese card": "L0.0/cards/get_battery_status.zh.md",
+    "L0.5 English cards": "L0.5/cards/en/",
+    "L0.5 Chinese cards": "L0.5/cards/zh/"
   }
 }

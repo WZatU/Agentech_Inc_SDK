@@ -1,6 +1,6 @@
 # Agentech.get_battery_status
 
-**L0 · Telemetry** — Read one current battery-status snapshot; does not make safety decisions.
+**L0.0 · Telemetry** — Read one current battery-status snapshot; does not make safety decisions.
 
 ## Syntax
 

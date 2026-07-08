@@ -2,16 +2,12 @@
 
 L0.5 contains bounded atomic skill cards for movement, posture, safety, and sensing/posture adjustment.
 
-## Folders
+## Files
 
 | path | content |
 |---|---|
 | `cards/en/` | standalone English cards |
 | `cards/zh/` | standalone Chinese cards |
-| `cards/bilingual/` | standalone bilingual cards |
-| `collections/en.md` | English collection |
-| `collections/zh.md` | Chinese collection |
-| `collections/bilingual.md` | bilingual collection |
 
 ## Cards
 

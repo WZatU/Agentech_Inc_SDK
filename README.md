@@ -2,31 +2,47 @@
 
 Agentech SDK skill-card specifications for robot-dog control, telemetry, posture, safety, and sensing.
 
-This repository contains 13 bilingual SDK cards:
+Current version: `0.2.0`
 
-- 1 L0 telemetry card
+This repository contains 13 SDK cards:
+
+- 1 L0.0 telemetry card
 - 12 L0.5 atomic skill cards
-- English, Chinese, and bilingual Markdown versions
+- English and Chinese Markdown versions
+
+## Level Naming
+
+All level package folders use `L<integer>.<single decimal>` format.
+
+Current planned level sequence:
+
+- `L0.0`
+- `L0.5`
+- `L1.0`
+- `L1.5`
+- `L2.0`
+- `L2.5`
+
+Current active packages are `L0.0/` and `L0.5/`.
 
 ## Repository Structure
 
 | path | content |
 |---|---|
-| `L0/` | L0 telemetry/data-read package |
+| `L0.0/` | L0.0 telemetry/data-read package |
 | `L0.5/` | L0.5 atomic skill-card package |
-| `L0.5.md` | bilingual L0.5 card file |
-| `docs/` | global semantics and complete collections |
 | `manifest.json` | repository index |
+| `version history.md` | version history |
 
-## L0 Package
+## L0.0 Package
 
-`L0/` contains direct telemetry/data-read cards.
+`L0.0/` contains direct telemetry/data-read cards.
 
 Current card:
 
 - `Agentech.get_battery_status`
 
-L0 cards read state only. They do not command motion, stream over time, make safety decisions, or schedule tasks.
+L0.0 cards read state only. They do not command motion, stream over time, make safety decisions, or schedule tasks.
 
 ## L0.5 Package
 
@@ -73,9 +89,7 @@ This returns `rejected(E_PROFILE_MIXED)`.
 
 | file | purpose |
 |---|---|
-| `L0/collections/bilingual.md` | bilingual L0 package |
-| `L0.5.md` | bilingual L0.5 skill-card file |
-| `L0.5/collections/bilingual.md` | bilingual L0.5 package |
-| `docs/all_cards_bilingual.md` | all 13 bilingual cards |
-| `docs/global_semantics_en.md` | English global execution semantics |
-| `docs/global_semantics_zh.md` | Chinese global execution semantics |
+| `L0.0/cards/get_battery_status.en.md` | English L0.0 card |
+| `L0.0/cards/get_battery_status.zh.md` | Chinese L0.0 card |
+| `L0.5/cards/en/` | English L0.5 cards |
+| `L0.5/cards/zh/` | Chinese L0.5 cards |

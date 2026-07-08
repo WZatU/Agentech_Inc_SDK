@@ -1,10 +1,13 @@
+<!-- begin of method name -->
 # Agentech.forward
+<!-- end of method name -->
+
 
 **L0.5 · 移动** — 沿机器人自身坐标系向前移动；不避障，不验证是否到达指定距离。
 
 ## 调用形式
 
-```matlab
+```python
 Agentech.forward()
 Agentech.forward(SpeedMps=0.3, DurationS=1.0)
 Agentech.forward(SpeedPercent=30, DurationS=1.0)
