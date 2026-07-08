@@ -1,0 +1,11 @@
+{
+  "package": "L0",
+  "description": "Atomic telemetry/data-read cards.",
+  "cards": [
+    {
+      "id": "13_get_battery_status",
+      "function": "Agentech.get_battery_status",
+      "layer": "L0"
+    }
+  ]
+}

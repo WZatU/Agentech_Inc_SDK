@@ -1,0 +1,18 @@
+{
+  "name": "Agentech_Inc_SDK",
+  "version": "0.1.0",
+  "cards": {
+    "total": 13,
+    "L0": 1,
+    "L0.5": 12
+  },
+  "packages": {
+    "L0": "L0/",
+    "L0.5": "L0.5/"
+  },
+  "entrypoints": {
+    "L0 package": "L0/",
+    "L0.5 bilingual file": "L0.5.md",
+    "all bilingual cards": "docs/all_cards_bilingual.md"
+  }
+}

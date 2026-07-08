@@ -1,0 +1,66 @@
+{
+  "package": "L0.5",
+  "description": "Atomic bounded robot action/posture/safety/sensing cards.",
+  "cards": [
+    {
+      "id": "01_forward",
+      "function": "Agentech.forward",
+      "layer": "L0.5"
+    },
+    {
+      "id": "02_backward",
+      "function": "Agentech.backward",
+      "layer": "L0.5"
+    },
+    {
+      "id": "03_lateral",
+      "function": "Agentech.lateral",
+      "layer": "L0.5"
+    },
+    {
+      "id": "04_turn",
+      "function": "Agentech.turn",
+      "layer": "L0.5"
+    },
+    {
+      "id": "05_twist",
+      "function": "Agentech.twist",
+      "layer": "L0.5"
+    },
+    {
+      "id": "06_backflip",
+      "function": "Agentech.backflip",
+      "layer": "L0.5"
+    },
+    {
+      "id": "07_jump",
+      "function": "Agentech.jump",
+      "layer": "L0.5"
+    },
+    {
+      "id": "08_stand",
+      "function": "Agentech.stand",
+      "layer": "L0.5"
+    },
+    {
+      "id": "09_sit",
+      "function": "Agentech.sit",
+      "layer": "L0.5"
+    },
+    {
+      "id": "10_stop",
+      "function": "Agentech.stop",
+      "layer": "L0.5"
+    },
+    {
+      "id": "11_emergency_stop",
+      "function": "Agentech.emergency_stop",
+      "layer": "L0.5"
+    },
+    {
+      "id": "12_look",
+      "function": "Agentech.look",
+      "layer": "L0.5"
+    }
+  ]
+}
