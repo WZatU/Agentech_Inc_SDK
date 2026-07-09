@@ -4,6 +4,13 @@
 
 L0.5 cards expose direct robot actions with explicit parameter profiles, defaults, runtime behavior, and return semantics. Each card is available in English and Chinese.
 
+## Language Entry Points
+
+| Language | Entry | Purpose |
+| --- | --- | --- |
+| English | `cards/en/README.md` | English reading guide and card index |
+| Chinese | `cards/zh/README.md` | 中文阅读入口和卡片索引 |
+
 ## Cards
 
 | # | API | Category | English | Chinese |
