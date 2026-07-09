@@ -6,12 +6,14 @@ L0.5 cards expose direct robot actions with explicit parameter profiles, default
 
 ## Language Entry Points
 
-| Language | Entry | Purpose |
-| --- | --- | --- |
-| English | `cards/en/README.md` | English reading guide and card index |
-| Chinese | `cards/zh/README.md` | 中文阅读入口和卡片索引 |
+This package uses one README at the package level. English and Chinese card indexes are kept here so the GitHub tree stays simple: the `cards/en/` and `cards/zh/` folders contain card files only.
 
-## Cards
+| Language | L0.0 card | L0.5 cards |
+| --- | --- | --- |
+| English | `../L0.0/cards/get_battery_status.en.md` | `cards/en/` |
+| Chinese | `../L0.0/cards/get_battery_status.zh.md` | `cards/zh/` |
+
+## Card Index
 
 | # | API | Category | English | Chinese |
 | ---: | --- | --- | --- | --- |
