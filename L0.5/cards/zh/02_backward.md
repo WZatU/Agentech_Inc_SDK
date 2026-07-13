@@ -28,7 +28,8 @@ Agentech.backward(distance_m: float, speed_mps: float)
 1. 每次调用最多只能使用一个选择参数：`speed_mps`、`speed_percent`、`speed_level`、`pace`、`step_count` 或 `distance_m`。
 2. `distance_m + speed_mps` 选择 distance-speed 模式；其他跨模式组合返回 `rejected(E_PROFILE_MIXED)`。
 3. 超出范围的参数返回 `rejected(E_RANGE)`，不会自动夹到合法范围。
-4. 每次运动都必须尝试受控停止；如果 emergency stop 接管，以急停状态为准。
+4. 如果 `distance_m / speed_mps > 10.0 s`，distance-speed 调用会被拒绝；距离参数不能绕过 bounded-duration 上限。
+5. 每次运动都必须尝试受控停止；如果 emergency stop 接管，以急停状态为准。
 <!-- END: Constraints -->
 
 <!-- START: Defaults -->
@@ -52,18 +53,20 @@ Agentech.backward(distance_m: float, speed_mps: float)
 
 | 模式 | 选择参数 | 辅助参数 / 默认值 | 范围 / 规则 |
 | --- | --- | --- | --- |
-| speed-time | `speed_mps` | `duration_s=1.0` | `0 < speed_mps <= 1.0`; `0 < duration_s <= 10.0` |
-| percent-time | `speed_percent` | `duration_s=1.0` | `1 <= speed_percent <= 100`，相对当前 backward 标定全速 |
+| speed-time | `speed_mps` | `duration_s=1.0` | `0.05 <= speed_mps <= 1.0`; `0 < duration_s <= 10.0` |
+| percent-time | `speed_percent` | `duration_s=1.0` | `5 <= speed_percent <= 100`，相对 Agentech 对外安全上限 |
 | level-time | `speed_level` | `duration_s=1.0` | `speed_level` 为 `1`、`2`、`3`、`4` 或 `5` |
 | pace-time | `pace` | `duration_s=1.0` | `pace` 为 `"slow"`、`"normal"` 或 `"fast"` |
 | steps | `step_count` | `gait="auto"`, `step_rate_hz=1.5` | `1 <= step_count <= 10`; `0.5 <= step_rate_hz <= 3.0` |
-| distance-speed | `distance_m` | `speed_mps=0.4` | `0 < distance_m <= 3.0`; `0 < speed_mps <= 1.0` |
+| distance-speed | `distance_m` | `speed_mps=0.4` | `0 < distance_m <= 3.0`; `0.05 <= speed_mps <= 1.0`; `distance_m / speed_mps <= 10.0` |
 
 ### 参数解释
 
-`speed_mps` 是公开安全速度参数，单位是 m/s。`speed_percent`、`speed_level` 和 `pace` 使用与 forward 一致的产品标定速度。
+参数限制的唯一来源是 `profiles/aegis/zsl1.yaml`。
 
-当前 backward 标定全速按 `1.0 m/s` 记录。`speed_percent=100` 对应 `1.0 m/s`，`speed_percent=40` 对应 `0.4 m/s`，`speed_percent=20` 对应 `0.2 m/s`。
+Agentech 当前对外安全上限是 `1.0 m/s`。上游 ZSL-1 的 `vx` 非零命令绝对值范围是 `0.05–3.0 m/s`，后退方向由内部负号表达。`1.0 m/s` 是暂定的软件 soft limit，不是底层硬件命令上限，也不表示已经实测的“全速”。
+
+`speed_percent=100` 对应 `1.0 m/s` 的对外安全上限。低于 `5%` 的输入会被拒绝，因为换算结果低于底层 `vx` 最小非零命令。
 
 | `speed_level` | 对应速度 |
 | --- | --- |

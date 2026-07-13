@@ -1,0 +1,106 @@
+schema_version: 1
+
+robot_id: aegis
+upstream_family: agibot_zsl
+model_id: zsl1
+model_verification: pending_device_confirmation
+
+coordinate_frame:
+  x: forward
+  y: left
+  z: up
+  quaternion_order: [w, x, y, z]
+
+limits:
+  backend_hard:
+    vx_mps:
+      min: -3.0
+      max: 3.0
+      zero_allowed: true
+      nonzero_min_abs: 0.05
+      source: Agibot ZSL-1 HighLevel.move(vx, vy, yaw_rate)
+      verification_status: upstream_documented
+
+    vy_mps:
+      min: -1.0
+      max: 1.0
+      zero_allowed: true
+      nonzero_min_abs: 0.10
+      source: Agibot ZSL-1 HighLevel.move(vx, vy, yaw_rate)
+      verification_status: upstream_documented
+
+    locomotion_yaw_rate_rad_s:
+      min: -3.0
+      max: 3.0
+      zero_allowed: true
+      nonzero_min_abs: 0.02
+      source: Agibot ZSL-1 HighLevel.move(vx, vy, yaw_rate)
+      verification_status: upstream_documented
+
+    attitude_roll_rate_rad_s:
+      min: -0.5
+      max: 0.5
+      source: Agibot ZSL-1 HighLevel.attitudeControl
+      verification_status: upstream_documented
+
+    attitude_pitch_rate_rad_s:
+      min: -0.5
+      max: 0.5
+      source: Agibot ZSL-1 HighLevel.attitudeControl
+      verification_status: upstream_documented
+
+    attitude_yaw_rate_rad_s:
+      min: -0.5
+      max: 0.5
+      source: Agibot ZSL-1 HighLevel.attitudeControl
+      verification_status: upstream_documented
+
+    body_height_rate_mps:
+      min: -0.5
+      max: 0.5
+      source: Agibot ZSL-1 HighLevel.attitudeControl
+      verification_status: upstream_documented
+
+  public_soft:
+    forward_speed_mps:
+      min_nonzero: 0.05
+      max: 1.0
+      provenance: provisional_product_limit
+      verified_on_hardware: false
+
+    backward_speed_mps:
+      min_nonzero: 0.05
+      max: 1.0
+      provenance: provisional_product_limit
+      verified_on_hardware: false
+
+    lateral_speed_mps:
+      min_nonzero: 0.10
+      max: 0.5
+      provenance: provisional_product_limit
+      verified_on_hardware: false
+
+    turn_yaw_rate_rad_s:
+      min_nonzero: 0.02
+      max: 1.0
+      provenance: provisional_product_limit
+      verified_on_hardware: false
+
+    attitude_yaw_rate_rad_s:
+      min_nonzero: 0.02
+      max: 0.2
+      provenance: conservative_initial_limit
+      verified_on_hardware: false
+
+unknown_limits:
+  body_roll_angle_rad: null
+  body_pitch_angle_rad: null
+  body_height_min_m: null
+  body_height_max_m: null
+  joint_position_limits_rad: null
+  joint_velocity_limits_rad_s: null
+  continuous_joint_torque_nm: null
+
+verification:
+  firmware_version: null
+  last_verified_at: null

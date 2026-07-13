@@ -3,9 +3,9 @@
 <!-- START: Definition -->
 ## Definition
 
-**L0.5 · Movement** — Twist the Aegis robot dog's torso left or right by a small angle while the feet stay planted.
+**L0.5 · Movement** — Apply a bounded left/right body-yaw rate while the Aegis robot dog remains standing, then stop the attitude command.
 
-The function scope is an in-place torso action. It adjusts body posture and is not a route-turning command.
+The function wraps the upstream ZSL-1 `attitudeControl(..., yaw_vel, ...)` axis. It adjusts body attitude and is not a locomotion turn or a base-heading command.
 <!-- END: Definition -->
 
 <!-- START: Syntax -->
@@ -13,20 +13,26 @@ The function scope is an in-place torso action. It adjusts body posture and is n
 
 ```python
 Agentech.twist(direction: str)
-Agentech.twist(direction: str, angle_deg: float, yaw_rate_rad_s: float)
-Agentech.twist(direction: str, angle_percent: int)
-Agentech.twist(direction: str, twist_level: int)
-Agentech.twist(direction: str, hold_s: float)
+Agentech.twist(direction: str, yaw_rate_rad_s: float, duration_s: float)
+Agentech.twist(
+    direction: str,
+    yaw_rate_rad_s: float,
+    duration_s: float,
+    hold_s: float,
+    return_to_neutral: bool,
+)
 ```
 <!-- END: Syntax -->
 
 <!-- START: Constraints -->
 ## Constraints
 
-1. `direction` is required and must be `"left"` or `"right"`; it is not a profile selector.
-2. Each call may use at most one selector: `angle_deg`, `angle_percent`, or `twist_level`.
-3. `hold_s` is auxiliary and may be combined with any twist profile.
-4. Out-of-range values return `rejected(E_RANGE)`; mixed profiles return `rejected(E_PROFILE_MIXED)`.
+1. `direction` is required and must be `"left"` or `"right"`.
+2. `0.02 <= yaw_rate_rad_s <= 0.2`. This is the Agentech public soft range; the upstream attitude-yaw hard range is `0.0–0.5 rad/s` by magnitude.
+3. `0 < duration_s <= 2.0` and `0 <= hold_s <= 3.0`.
+4. The wrapper converts `direction` to the sign of upstream `yaw_vel`; callers always pass a positive magnitude.
+5. Out-of-range values return `rejected(E_RANGE)` and are not clamped.
+6. This API does not accept `angle_deg`: ZSL-1 documents attitude velocity, not an absolute body-yaw mechanical limit.
 <!-- END: Constraints -->
 
 <!-- START: Defaults -->
@@ -34,47 +40,31 @@ Agentech.twist(direction: str, hold_s: float)
 
 | Call | Default behavior |
 | --- | --- |
-| `Agentech.twist(direction=...)` | Equivalent to `Agentech.twist(direction=..., angle_deg=15, yaw_rate_rad_s=0.35, hold_s=0)` |
-| `Agentech.twist(direction=..., angle_deg=...)` | `yaw_rate_rad_s` defaults to `0.35`; `hold_s` defaults to `0` |
-| `Agentech.twist(direction=..., angle_percent=...)` | `hold_s` defaults to `0` |
-| `Agentech.twist(direction=..., twist_level=...)` | `hold_s` defaults to `0` |
-| `Agentech.twist(direction=..., hold_s=...)` | Uses default `angle_deg=15`, `yaw_rate_rad_s=0.35` |
+| `Agentech.twist(direction=...)` | Equivalent to `Agentech.twist(direction=..., yaw_rate_rad_s=0.2, duration_s=0.5, hold_s=0, return_to_neutral=True)` |
+| `Agentech.twist(direction=..., yaw_rate_rad_s=...)` | `duration_s` defaults to `0.5`; `hold_s` defaults to `0`; `return_to_neutral` defaults to `True` |
+| `Agentech.twist(direction=..., duration_s=...)` | `yaw_rate_rad_s` defaults to `0.2`; `hold_s` defaults to `0`; `return_to_neutral` defaults to `True` |
 <!-- END: Defaults -->
 
 <!-- START: Parameters -->
 ## Parameters
 
-### Parameter Profiles
-
-| Profile | Selector | Auxiliary / Default | Range / Rule |
+| Parameter | Default | Range / Rule | Description |
 | --- | --- | --- | --- |
-| direction | - | `direction` required | `"left"` or `"right"` |
-| angle-rate | `angle_deg` | `yaw_rate_rad_s=0.35`, `hold_s=0` | `0 < angle_deg <= 30`; `0.05 <= yaw_rate_rad_s <= 2.09` |
-| percent-angle | `angle_percent` | `hold_s=0` | `1 <= angle_percent <= 100`, relative to `30 deg` |
-| level | `twist_level` | `hold_s=0` | `twist_level` is `1`, `2`, `3`, `4`, or `5` |
-| hold | - | `hold_s=0` | `0 <= hold_s <= 3.0` |
+| `direction` | required | `"left"` or `"right"` | Selects the sign of the upstream attitude `yaw_vel` command. |
+| `yaw_rate_rad_s` | `0.2` | `0.02–0.2 rad/s` | Positive body-yaw rate magnitude exposed by the Agentech public API. |
+| `duration_s` | `0.5` | `0 < duration_s <= 2.0` | Time for which the nonzero attitude-yaw command is applied. |
+| `hold_s` | `0` | `0 <= hold_s <= 3.0` | Optional wait after the nonzero rate command stops. |
+| `return_to_neutral` | `True` | boolean | Requests the Agentech wrapper to return body yaw to neutral using attitude feedback. |
 
-### Parameter Notes
+The authoritative limit source is `profiles/aegis/zsl1.yaml`. ZSL-1 permits attitude `yaw_vel` through `0.5 rad/s` by magnitude. Agentech applies a conservative `0.2 rad/s` public soft maximum. The `3.0 rad/s` locomotion yaw limit belongs to `move(...)`/`turn(...)` and must not be used here.
 
-`angle_deg` is torso twist angle, not base heading angle.
-
-`angle_percent` uses `30 deg` as `100%`; `angle_percent=50` maps to `15 deg`.
-
-| `twist_level` | Angle |
-| --- | --- |
-| `1` | `6 deg` |
-| `2` | `12 deg` |
-| `3` | `18 deg` |
-| `4` | `24 deg` |
-| `5` | `30 deg` |
-
-`hold_s` is the hold time after reaching the requested twist. It is not a timeout or stability check.
+`return_to_neutral=True` is an Agentech wrapper behavior, not a native parameter of `attitudeControl`. It requires body-attitude feedback; if that capability is unavailable, the call returns `rejected(E_CAPABILITY_UNAVAILABLE)` rather than estimating an absolute angle from time alone.
 <!-- END: Parameters -->
 
 <!-- START: Behavior -->
 ## Behavior
 
-The SDK resolves `direction` and the selected twist profile, executes in-place torso twist, and holds for `hold_s` when requested.
+The SDK verifies standing state, converts `direction` to signed attitude `yaw_vel`, applies that command for `duration_s`, then sends zero attitude yaw rate. It waits for `hold_s` and returns to neutral when requested and supported. The call blocks until completion, rejection, preemption, emergency stop, or timeout.
 <!-- END: Behavior -->
 
 <!-- START: Return -->
@@ -97,9 +87,17 @@ SkillResult(status, trace_id, error_code, message)
 
 ```python
 result = Agentech.twist(direction="left")
-result = Agentech.twist(direction="right", angle_deg=28, yaw_rate_rad_s=0.35)
-result = Agentech.twist(direction="left", angle_percent=50)
-result = Agentech.twist(direction="right", twist_level=3)
-result = Agentech.twist(direction="left", hold_s=0.5)
+result = Agentech.twist(
+    direction="right",
+    yaw_rate_rad_s=0.15,
+    duration_s=0.5,
+)
+result = Agentech.twist(
+    direction="left",
+    yaw_rate_rad_s=0.2,
+    duration_s=0.5,
+    hold_s=0.5,
+    return_to_neutral=True,
+)
 ```
 <!-- END: Example -->

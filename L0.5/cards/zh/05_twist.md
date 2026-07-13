@@ -3,9 +3,9 @@
 <!-- START: Definition -->
 ## 定义
 
-**L0.5 · Movement** — 让 Aegis 机器狗在足端保持支撑的情况下，向左或向右扭转机身一小段角度。
+**L0.5 · Movement** — 让站立状态下的 Aegis 机器狗以有限的机身 yaw 角速度向左或向右扭动，然后停止姿态速度指令。
 
-作用范围限定为原地躯干动作：它调整机身姿态，不作为路线转向指令。
+该函数封装上游 ZSL-1 `attitudeControl(..., yaw_vel, ...)` 轴，用于调整机身姿态；它不是 locomotion turn，也不改变底盘路线朝向。
 <!-- END: Definition -->
 
 <!-- START: Syntax -->
@@ -13,20 +13,26 @@
 
 ```python
 Agentech.twist(direction: str)
-Agentech.twist(direction: str, angle_deg: float, yaw_rate_rad_s: float)
-Agentech.twist(direction: str, angle_percent: int)
-Agentech.twist(direction: str, twist_level: int)
-Agentech.twist(direction: str, hold_s: float)
+Agentech.twist(direction: str, yaw_rate_rad_s: float, duration_s: float)
+Agentech.twist(
+    direction: str,
+    yaw_rate_rad_s: float,
+    duration_s: float,
+    hold_s: float,
+    return_to_neutral: bool,
+)
 ```
 <!-- END: Syntax -->
 
 <!-- START: Constraints -->
 ## 约束
 
-1. `direction` 必填，只能是 `"left"` 或 `"right"`；它不是 profile selector。
-2. 每次调用最多只能使用一个选择参数：`angle_deg`、`angle_percent` 或 `twist_level`。
-3. `hold_s` 是辅助参数，可以和任意 twist profile 搭配。
-4. 超出范围的参数返回 `rejected(E_RANGE)`；混合 profile 返回 `rejected(E_PROFILE_MIXED)`。
+1. `direction` 必填，只能是 `"left"` 或 `"right"`。
+2. `0.02 <= yaw_rate_rad_s <= 0.2`。这是 Agentech 对外 soft range；上游 attitude yaw 的硬范围按绝对值为 `0.0–0.5 rad/s`。
+3. `0 < duration_s <= 2.0`，`0 <= hold_s <= 3.0`。
+4. wrapper 会把 `direction` 转换成上游 `yaw_vel` 的正负号；调用者始终传正的角速度绝对值。
+5. 超出范围的参数返回 `rejected(E_RANGE)`，不会自动夹到合法范围。
+6. 该 API 不接受 `angle_deg`：ZSL-1 公开的是姿态角速度接口，没有公开绝对机身 yaw 机械极限。
 <!-- END: Constraints -->
 
 <!-- START: Defaults -->
@@ -34,47 +40,31 @@ Agentech.twist(direction: str, hold_s: float)
 
 | 调用 | 默认反应 |
 | --- | --- |
-| `Agentech.twist(direction=...)` | 等价于 `Agentech.twist(direction=..., angle_deg=15, yaw_rate_rad_s=0.35, hold_s=0)` |
-| `Agentech.twist(direction=..., angle_deg=...)` | `yaw_rate_rad_s` 默认 `0.35`，`hold_s` 默认 `0` |
-| `Agentech.twist(direction=..., angle_percent=...)` | `hold_s` 默认 `0` |
-| `Agentech.twist(direction=..., twist_level=...)` | `hold_s` 默认 `0` |
-| `Agentech.twist(direction=..., hold_s=...)` | 使用默认 `angle_deg=15`，`yaw_rate_rad_s=0.35` |
+| `Agentech.twist(direction=...)` | 等价于 `Agentech.twist(direction=..., yaw_rate_rad_s=0.2, duration_s=0.5, hold_s=0, return_to_neutral=True)` |
+| `Agentech.twist(direction=..., yaw_rate_rad_s=...)` | `duration_s` 默认 `0.5`，`hold_s` 默认 `0`，`return_to_neutral` 默认 `True` |
+| `Agentech.twist(direction=..., duration_s=...)` | `yaw_rate_rad_s` 默认 `0.2`，`hold_s` 默认 `0`，`return_to_neutral` 默认 `True` |
 <!-- END: Defaults -->
 
 <!-- START: Parameters -->
 ## 参数
 
-### 参数模式
-
-| 模式 | 选择参数 | 辅助参数 / 默认值 | 范围 / 规则 |
+| 参数 | 默认值 | 范围 / 规则 | 说明 |
 | --- | --- | --- | --- |
-| direction | - | `direction` 必填 | `"left"` 或 `"right"` |
-| angle-rate | `angle_deg` | `yaw_rate_rad_s=0.35`, `hold_s=0` | `0 < angle_deg <= 30`; `0.05 <= yaw_rate_rad_s <= 2.09` |
-| percent-angle | `angle_percent` | `hold_s=0` | `1 <= angle_percent <= 100`，相对 `30 deg` |
-| level | `twist_level` | `hold_s=0` | `twist_level` 为 `1`、`2`、`3`、`4` 或 `5` |
-| hold | - | `hold_s=0` | `0 <= hold_s <= 3.0` |
+| `direction` | 必填 | `"left"` 或 `"right"` | 决定上游 attitude `yaw_vel` 指令的正负号。 |
+| `yaw_rate_rad_s` | `0.2` | `0.02–0.2 rad/s` | Agentech 公共 API 暴露的机身 yaw 角速度绝对值。 |
+| `duration_s` | `0.5` | `0 < duration_s <= 2.0` | 非零 attitude yaw 指令的持续时间。 |
+| `hold_s` | `0` | `0 <= hold_s <= 3.0` | 非零角速度停止后的可选等待时间。 |
+| `return_to_neutral` | `True` | boolean | 要求 Agentech wrapper 使用姿态反馈让机身 yaw 回到中立位。 |
 
-### 参数解释
+参数限制的唯一来源是 `profiles/aegis/zsl1.yaml`。ZSL-1 允许 attitude `yaw_vel` 的绝对值最大为 `0.5 rad/s`；Agentech 使用更保守的 `0.2 rad/s` 对外 soft maximum。`move(...)` / `turn(...)` 的 `3.0 rad/s` locomotion yaw 上限不能用于这里。
 
-`angle_deg` 是机身扭转角度，不是机器人底盘转向角度。
-
-`angle_percent` 以最大扭转角 `30 deg` 为 100%，例如 `angle_percent=50` 对应 `15 deg`。
-
-| `twist_level` | 对应角度 |
-| --- | --- |
-| `1` | `6 deg` |
-| `2` | `12 deg` |
-| `3` | `18 deg` |
-| `4` | `24 deg` |
-| `5` | `30 deg` |
-
-`hold_s` 是扭转到目标角度后的保持时间。它不是超时时间，也不是稳定性验证。
+`return_to_neutral=True` 是 Agentech wrapper 行为，不是 `attitudeControl` 的原生参数。它需要机身姿态反馈；能力不可用时返回 `rejected(E_CAPABILITY_UNAVAILABLE)`，不能只靠时间积分猜测绝对角度。
 <!-- END: Parameters -->
 
 <!-- START: Behavior -->
 ## 行为
 
-SDK 会解析 `direction` 和 twist profile，让机器人执行原地躯干扭转，并在需要时保持 `hold_s`。
+SDK 会先确认站立状态，把 `direction` 转换成带符号的 attitude `yaw_vel`，持续执行 `duration_s`，然后发送零姿态 yaw 速度。随后按需等待 `hold_s`，并在能力支持时回到中立位。调用会阻塞到完成、拒绝、抢占、急停或超时。
 <!-- END: Behavior -->
 
 <!-- START: Return -->
@@ -97,9 +87,17 @@ SkillResult(status, trace_id, error_code, message)
 
 ```python
 result = Agentech.twist(direction="left")
-result = Agentech.twist(direction="right", angle_deg=28, yaw_rate_rad_s=0.35)
-result = Agentech.twist(direction="left", angle_percent=50)
-result = Agentech.twist(direction="right", twist_level=3)
-result = Agentech.twist(direction="left", hold_s=0.5)
+result = Agentech.twist(
+    direction="right",
+    yaw_rate_rad_s=0.15,
+    duration_s=0.5,
+)
+result = Agentech.twist(
+    direction="left",
+    yaw_rate_rad_s=0.2,
+    duration_s=0.5,
+    hold_s=0.5,
+    return_to_neutral=True,
+)
 ```
 <!-- END: Example -->

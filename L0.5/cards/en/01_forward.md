@@ -28,7 +28,8 @@ Agentech.forward(distance_m: float, speed_mps: float)
 1. Each call may use at most one selector: `speed_mps`, `speed_percent`, `speed_level`, `pace`, `step_count`, or `distance_m`.
 2. `distance_m + speed_mps` selects the distance-speed profile; other cross-profile combinations return `rejected(E_PROFILE_MIXED)`.
 3. Out-of-range values return `rejected(E_RANGE)` and are not clamped.
-4. Every motion attempts controlled stop; emergency stop state takes precedence.
+4. A distance-speed call is rejected when `distance_m / speed_mps > 10.0 s`; distance input cannot bypass the bounded-duration limit.
+5. Every motion attempts controlled stop; emergency stop state takes precedence.
 <!-- END: Constraints -->
 
 <!-- START: Defaults -->
@@ -52,18 +53,20 @@ Agentech.forward(distance_m: float, speed_mps: float)
 
 | Profile | Selector | Auxiliary / Default | Range / Rule |
 | --- | --- | --- | --- |
-| speed-time | `speed_mps` | `duration_s=1.0` | `0 < speed_mps <= 1.0`; `0 < duration_s <= 10.0` |
-| percent-time | `speed_percent` | `duration_s=1.0` | `1 <= speed_percent <= 100`, relative to calibrated forward full speed |
+| speed-time | `speed_mps` | `duration_s=1.0` | `0.05 <= speed_mps <= 1.0`; `0 < duration_s <= 10.0` |
+| percent-time | `speed_percent` | `duration_s=1.0` | `5 <= speed_percent <= 100`, relative to the Agentech public safe maximum |
 | level-time | `speed_level` | `duration_s=1.0` | `speed_level` is `1`, `2`, `3`, `4`, or `5` |
 | pace-time | `pace` | `duration_s=1.0` | `pace` is `"slow"`, `"normal"`, or `"fast"` |
 | steps | `step_count` | `gait="auto"`, `step_rate_hz=1.5` | `1 <= step_count <= 20`; `0.5 <= step_rate_hz <= 3.0` |
-| distance-speed | `distance_m` | `speed_mps=0.4` | `0 < distance_m <= 5.0`; `0 < speed_mps <= 1.0` |
+| distance-speed | `distance_m` | `speed_mps=0.4` | `0 < distance_m <= 5.0`; `0.05 <= speed_mps <= 1.0`; `distance_m / speed_mps <= 10.0` |
 
 ### Parameter Notes
 
-`speed_mps` is the public safe-speed parameter in m/s. `speed_percent`, `speed_level`, and `pace` are product-calibrated speed expressions.
+The authoritative limit source is `profiles/aegis/zsl1.yaml`.
 
-Current calibrated forward full speed is recorded as `1.0 m/s`. `speed_percent=100` maps to `1.0 m/s`, `speed_percent=40` maps to `0.4 m/s`, and `speed_percent=20` maps to `0.2 m/s`.
+The Agentech public safe maximum is currently `1.0 m/s`. The upstream ZSL-1 `vx` command envelope permits nonzero magnitudes from `0.05 m/s` through `3.0 m/s`. The public safe maximum is a provisional software limit, not the upstream hardware-command maximum or a measured full-speed claim.
+
+`speed_percent=100` maps to the `1.0 m/s` public safe maximum. Values below `5%` are rejected because they would fall below the upstream minimum nonzero `vx` command.
 
 | `speed_level` | Speed |
 | --- | --- |
