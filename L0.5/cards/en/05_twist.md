@@ -5,8 +5,6 @@
 
 **L0.5 · Posture** — Twist the Aegis robot dog’s body to the left or right while standing, optionally hold the posture, then return to a stable standing posture.
 
-Use this function to adjust the robot’s body-yaw posture without intentionally commanding locomotion. It is not a route-turning command and does not replace `Agentech.turn()`.
-
 Angle-based twists use open-loop timing. They do not guarantee an exact measured body angle.
 <!-- END: Definition -->
 
