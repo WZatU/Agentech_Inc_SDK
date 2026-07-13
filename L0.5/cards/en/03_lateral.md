@@ -31,7 +31,7 @@ Agentech.lateral(direction: str, distance_m: float, speed_mps: float)
 3. `distance_m` may be paired only with `speed_mps`.
 4. A distance-based call must not include `duration_s`; the SDK calculates the duration from distance and speed.
 5. Mixing incompatible parameter profiles returns `rejected(E_PROFILE_MIXED)`.
-6. `speed_mps` represents a positive speed magnitude. The movement direction is controlled separately by `direction`.
+6. `speed_mps` represents a positive speed magnitude. Direction is controlled separately by `direction`.
 7. Values outside the supported ranges return `rejected(E_RANGE)` and are not automatically adjusted.
 8. For distance-based movement, `distance_m / speed_mps` must not exceed `10.0` seconds.
 9. The robot must be standing and ready before sideways movement begins.
@@ -41,14 +41,20 @@ Agentech.lateral(direction: str, distance_m: float, speed_mps: float)
 <!-- START: Defaults -->
 ## Defaults
 
+| Parameter | Default | Meaning |
+| --- | ---: | --- |
+| `speed_mps` | `0.4 m/s` | 40% of the maximum speed; equivalent to `pace="normal"` and `speed_level=8` |
+| `duration_s` | `1.0 s` | Used when a speed-based call omits duration |
+| Distance-profile `speed_mps` | `0.4 m/s` | Used when `distance_m` is provided without an explicit speed |
+
 | Call | Default behavior |
 | --- | --- |
-| `Agentech.lateral(direction=...)` | Moves in the requested direction at `0.5 m/s` for `1.0 s` |
+| `Agentech.lateral(direction=...)` | Moves in the requested direction at `0.4 m/s` for `1.0 s` |
 | `Agentech.lateral(direction=..., speed_mps=...)` | `duration_s` defaults to `1.0` |
 | `Agentech.lateral(direction=..., speed_percent=...)` | `duration_s` defaults to `1.0` |
 | `Agentech.lateral(direction=..., speed_level=...)` | `duration_s` defaults to `1.0` |
 | `Agentech.lateral(direction=..., pace=...)` | `duration_s` defaults to `1.0` |
-| `Agentech.lateral(direction=..., distance_m=...)` | `speed_mps` defaults to `0.5` |
+| `Agentech.lateral(direction=..., distance_m=...)` | `speed_mps` defaults to `0.4` |
 <!-- END: Defaults -->
 
 <!-- START: Parameters -->
@@ -63,7 +69,7 @@ Agentech.lateral(direction: str, distance_m: float, speed_mps: float)
 | Percentage and time | `speed_percent` | `duration_s=1.0` | Integer from `5` to `100` |
 | Level and time | `speed_level` | `duration_s=1.0` | Integer from `0` to `20` |
 | Pace and time | `pace` | `duration_s=1.0` | `"slow"`, `"normal"`, or `"fast"` |
-| Distance and speed | `distance_m` | `speed_mps=0.5` | `0 < distance_m <= 2.0`; calculated duration must not exceed `10.0 s` |
+| Distance and speed | `distance_m` | `speed_mps=0.4` | `0 < distance_m <= 2.0`; calculated duration must not exceed `10.0 s` |
 
 ### `direction`
 
@@ -88,6 +94,8 @@ Provide this parameter as a positive magnitude. The `direction` parameter determ
 
 The SDK does not accept negative values or automatically convert them into a direction.
 
+If no speed parameter is provided, `speed_mps` defaults to `0.4 m/s`.
+
 ### `speed_percent`
 
 Sets the speed as a percentage of the maximum supported sideways speed of `1.0 m/s`.
@@ -99,9 +107,8 @@ speed_mps = speed_percent / 100 × 1.0
 | `speed_percent` | Sideways speed |
 | ---: | ---: |
 | `5` | `0.05 m/s` |
-| `10` | `0.1 m/s` |
-| `25` | `0.25 m/s` |
-| `50` | `0.5 m/s` |
+| `20` | `0.2 m/s` |
+| `40` | `0.4 m/s` |
 | `80` | `0.8 m/s` |
 | `100` | `1.0 m/s` |
 
@@ -117,14 +124,14 @@ Each nonzero level represents an increase of `0.05 m/s`:
 speed_mps = speed_level × 0.05
 ```
 
-| `speed_level` | Sideways speed | Meaning |
-| ---: | ---: | --- |
-| `0` | `0.0 m/s` | Stop |
-| `1` | `0.05 m/s` | Minimum nonzero speed |
-| `5` | `0.25 m/s` | Same speed as `"slow"` |
-| `10` | `0.5 m/s` | Same speed as `"normal"` |
-| `16` | `0.8 m/s` | Same speed as `"fast"` |
-| `20` | `1.0 m/s` | Maximum speed |
+| `speed_level` | Percentage of maximum | Sideways speed | Meaning |
+| ---: | ---: | ---: | --- |
+| `0` | `0%` | `0.0 m/s` | Stop |
+| `1` | `5%` | `0.05 m/s` | Minimum nonzero speed |
+| `4` | `20%` | `0.2 m/s` | Same speed as `"slow"` |
+| `8` | `40%` | `0.4 m/s` | Same speed as `"normal"` |
+| `16` | `80%` | `0.8 m/s` | Same speed as `"fast"` |
+| `20` | `100%` | `1.0 m/s` | Maximum speed |
 
 If `speed_level=0`, the SDK sends a stop command immediately and completes without waiting for `duration_s`.
 
@@ -136,11 +143,19 @@ Sets the speed using a simple named pace.
 
 | `pace` | Percentage of maximum | Speed level | Sideways speed |
 | --- | ---: | ---: | ---: |
-| `"slow"` | `25%` | `5` | `0.25 m/s` |
-| `"normal"` | `50%` | `10` | `0.5 m/s` |
+| `"slow"` | `20%` | `4` | `0.2 m/s` |
+| `"normal"` | `40%` | `8` | `0.4 m/s` |
 | `"fast"` | `80%` | `16` | `0.8 m/s` |
 
-`"slow"` is half the `"normal"` speed. `"normal"` is half the maximum speed, and `"fast"` is 80% of the maximum speed.
+The named paces use fixed percentages of the maximum supported sideways speed:
+
+```text
+slow   = 20% × 1.0 m/s = 0.2 m/s
+normal = 40% × 1.0 m/s = 0.4 m/s
+fast   = 80% × 1.0 m/s = 0.8 m/s
+```
+
+`"normal"` is the default pace.
 
 Named paces are convenient presets. They do not define the minimum or maximum supported speed.
 
@@ -170,14 +185,16 @@ The SDK calculates the required movement duration using:
 duration_s = distance_m / speed_mps
 ```
 
+If `speed_mps` is omitted, it defaults to `0.4 m/s`.
+
 The calculated duration must not exceed `10.0` seconds. Otherwise, the call returns `rejected(E_RANGE)`.
 
 For example:
 
 ```text
-distance_m = 0.5
-speed_mps = 0.25
-duration_s = 0.5 / 0.25 = 2.0
+distance_m = 0.4
+speed_mps = 0.2
+duration_s = 0.4 / 0.2 = 2.0
 ```
 
 Distance-based movement uses an open-loop estimate. The robot does not confirm that it traveled the exact requested distance.
@@ -199,6 +216,14 @@ Passing a reserved parameter returns `rejected(E_TBD_PARAMETER)` before a robot 
 ## Behavior
 
 The SDK first makes sure the robot is standing and ready to move. It then resolves the requested direction, speed, and duration.
+
+If no speed parameter is provided, the SDK uses the default speed of `0.4 m/s`, equivalent to:
+
+```python
+pace="normal"
+speed_percent=40
+speed_level=8
+```
 
 Direction is applied in the robot’s current body frame:
 
@@ -235,7 +260,7 @@ SkillResult(status, trace_id, error_code, message)
 ## Example
 
 ```python
-# Move left at the default speed of 0.5 m/s for 1 second.
+# Move left at the default "normal" speed of 0.4 m/s for 1 second.
 result = Agentech.lateral(direction="left")
 
 # Move right at the minimum nonzero speed.
@@ -245,28 +270,28 @@ result = Agentech.lateral(
     duration_s=1.0,
 )
 
-# Move left at 25% of the maximum speed: 0.25 m/s.
+# Move left at 20% of maximum speed: 0.2 m/s.
 result = Agentech.lateral(
     direction="left",
-    speed_percent=25,
+    speed_percent=20,
     duration_s=1.0,
 )
 
-# Move right at level 10: 0.5 m/s.
+# Move right at level 8: 0.4 m/s.
 result = Agentech.lateral(
     direction="right",
-    speed_level=10,
+    speed_level=8,
     duration_s=1.0,
 )
 
-# Move left at the slow pace: 0.25 m/s.
+# Move left at the slow pace: 0.2 m/s.
 result = Agentech.lateral(
     direction="left",
     pace="slow",
     duration_s=1.0,
 )
 
-# Move right at the normal pace: 0.5 m/s.
+# Move right at the normal pace: 0.4 m/s.
 result = Agentech.lateral(
     direction="right",
     pace="normal",
@@ -280,11 +305,18 @@ result = Agentech.lateral(
     duration_s=1.0,
 )
 
-# Move right approximately 0.5 meters in 2 seconds.
+# Move right approximately 0.4 meters in 2 seconds.
 result = Agentech.lateral(
     direction="right",
-    distance_m=0.5,
-    speed_mps=0.25,
+    distance_m=0.4,
+    speed_mps=0.2,
+)
+
+# Move left approximately 0.8 meters using the default speed.
+# The calculated duration is 0.8 / 0.4 = 2 seconds.
+result = Agentech.lateral(
+    direction="left",
+    distance_m=0.8,
 )
 
 # Send a stop command without moving sideways.
