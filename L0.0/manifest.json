@@ -1,23 +1,29 @@
 {
   "package": "L0.0",
   "layer": "L0.0",
-  "description": "Atomic telemetry/data-read cards.",
+  "description": "Atomic Aegis telemetry and data-read cards.",
   "structure": {
-    "status": "unclassified",
+    "status": "classified",
     "path_base": "repository_root",
-    "cards": {
-      "en": "Unclassify/En/",
-      "ch": "Unclassify/Ch/"
-    }
+    "card_path": "L0.0/ff.aegis/<language>/<category>/<card>.md"
+  },
+  "source": {
+    "robot": "ff.aegis",
+    "website": "https://www.agent-tech.ai/agentech-products/eaic-hub/view-sdk",
+    "synchronized": "2026-07-16"
   },
   "cards": [
     {
-      "id": "13_get_battery_status",
-      "function": "Agentech.get_battery_status",
+      "id": "get_battery_status",
+      "function": "Agentech.get_battery_status()",
       "layer": "L0.0",
+      "robot": "ff.aegis",
+      "category": "sensing",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/get_battery_status.en.md",
-        "ch": "Unclassify/Ch/get_battery_status.zh.md"
+        "en": "L0.0/ff.aegis/En/sensing/21_get_battery_status.md",
+        "ch": "L0.0/ff.aegis/Ch/sensing/21_get_battery_status.md"
       }
     }
   ]

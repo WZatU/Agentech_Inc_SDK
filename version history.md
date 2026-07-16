@@ -1,5 +1,20 @@
 # Version History
 
+## Website-aligned Aegis inventory - 2026-07-16
+
+- Synchronized the repository to the 21 Aegis Skills currently published in
+  EAIC HUB, producing 42 paired English and Chinese cards.
+- Added `diagonal`, four squat-movement Skills, `yaw`, `pitch`, `roll`, `stay`,
+  and `squat`.
+- Removed `twist` and `look` because they are no longer present in the current
+  Aegis website inventory.
+- Synchronized public parameter names, types, ranges, defaults, examples, and
+  availability states.
+- Kept the confirmed pace mapping at `slow=20%`, `normal=40%`, and `fast=80%`
+  of maximum supported speed.
+- Classified battery sensing under `L0.0`; classified direct movement, posture,
+  and safety actions under `L0.5`.
+
 ## 0.3.0 - 2026-07-13
 
 Bottom-level contract correction based on the Agibot ZSL-1 high-level SDK definitions.

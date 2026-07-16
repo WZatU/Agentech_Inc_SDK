@@ -1,11 +1,11 @@
-# `Agentech.forward(parameters)`
+# `Agentech.forward()`
 
 <!-- START: Definition -->
 ## Definition
 
-**L0.5 · Movement** — Move forward using one positive speed-magnitude profile, then perform a controlled stop.
+**L0.5 · Movement · Aegis** — Move forward using one positive speed-magnitude profile and a controlled stop.
 
-This is an open-loop movement. Acceleration, stabilization, and stopping can cause the actual travel distance or completion time to differ from a simple calculation.
+Source: [EAIC HUB Aegis SDK](https://www.agent-tech.ai/agentech-products/eaic-hub/view-sdk), synchronized 2026-07-16.
 <!-- END: Definition -->
 
 <!-- START: Syntax -->
@@ -13,79 +13,74 @@ This is an open-loop movement. Acceleration, stabilization, and stopping can cau
 
 ```python
 Agentech.forward()
-Agentech.forward(speed_mps: float, duration_s: float)
-Agentech.forward(distance_m: float, speed_mps: float)
-Agentech.forward(speed_percent: float, duration_s: float)
-Agentech.forward(speed_level: int, duration_s: float)
-Agentech.forward(pace: str, duration_s: float)
-Agentech.forward(step_count: int, step_rate_hz: float)         # development
+Agentech.forward(speed_mps=0.4, duration_s=1.0)
+Agentech.forward(distance_m=1.0, speed_mps=0.4)
+Agentech.forward(speed_percent=40, duration_s=1.0)
+Agentech.forward(speed_level=100, duration_s=1.0)
+Agentech.forward(pace="normal", duration_s=1.0)
+Agentech.forward(step_count=6, step_rate_hz=1.5)
 ```
 <!-- END: Syntax -->
 
 <!-- START: Constraints -->
 ## Constraints
 
-1. `speed_mps` is a positive forward speed magnitude; values outside its inclusive range are rejected.
-2. `duration_s` must be greater than `0` and no more than `10` seconds.
-3. `distance_m` is open loop. The requested distance and any calculated completion time are estimates, not guarantees.
-4. `speed_percent` is a relative request and does not promise an exact meters-per-second conversion.
-5. `speed_level` selects one of 512 integer levels. The card does not promise a fixed meters-per-second value for each level.
-6. `pace` resolves to a percentage of the maximum supported speed: `slow=20%`, `normal=40%`, and `fast=80%`.
-7. `step_count` and `step_rate_hz` are still under development and physical validation.
+1. Inputs must match the exact types and ranges in the parameter table; out-of-range inputs are rejected rather than silently reinterpreted.
+2. `pace` is an Agentech-confirmed maximum-speed ratio: `slow=20%`, `normal=40%`, and `fast=80%`.
+3. `step_count`, `step_rate_hz` are still under development and must not be represented as fully validated.
+4. Distance is an estimate, not a guarantee: the robot needs time to accelerate to the requested speed, so the actual distance traveled may differ from the value you calculate.
+5. Time is an estimate, not a guarantee: the robot needs time to accelerate to the requested speed, so the actual time used may differ from the value you calculate.
 <!-- END: Constraints -->
 
 <!-- START: Defaults -->
 ## Defaults
 
-| Call | Default |
-| --- | --- |
-| `Agentech.forward()` | `speed_mps=1.0`, `duration_s=1.0` |
-| `Agentech.forward(speed_mps=...)` | `duration_s=1.0` when omitted |
-| `Agentech.forward(step_count=...)` | `step_rate_hz=1.5` when omitted; development |
+| Source | Default | Status |
+| --- | --- | --- |
+| Default: 1 m/s for 1 second | `Agentech.forward()` | Available |
+| `speed_mps` | `1.0` | Available |
+| `duration_s` | `1.0` | Available |
+| `step_rate_hz` | `1.5` | Development |
 <!-- END: Defaults -->
 
 <!-- START: Parameters -->
 ## Parameters
 
-| Parameter | Type / range | Meaning |
-| --- | --- | --- |
-| `speed_mps` | float `[0.05, 3.00]` | Direct positive forward speed in meters per second |
-| `duration_s` | float `(0, 10]` | Time to hold the movement command |
-| `distance_m` | float `[0, 2]` | Requested open-loop travel distance |
-| `speed_percent` | float `[0, 100]` | Relative speed request; decimal percentages are accepted |
-| `speed_level` | int `[0, 511]` | 512 levels: `0` is the lowest moving-speed level and `511` is the highest |
-| `pace` | enum `{slow, normal, fast}` | Maximum-speed ratio: `{slow:20%, normal:40%, fast:80%}` |
-| `step_count` | int `[1, 20]` | Estimated steps, not exact measured foot contacts; development |
-| `step_rate_hz` | float `[0.5, 3.0]` | Estimated cadence; development |
+| Parameter | Type / range | Default | Status | Meaning |
+| --- | --- | --- | --- | --- |
+| `speed_mps` | `float [0.05, 3.00]` | `1.0` | Available | Direct positive forward speed in meters per second. Values outside the range are rejected. |
+| `duration_s` | `float (0, 10]` | `1.0` | Available | How long to hold the movement command. Must be greater than 0 and no more than 10 seconds. |
+| `distance_m` | `float [0, 2]` | — | Available | Requested travel distance for the distance-and-speed profile. This is an open-loop estimate; acceleration and stopping can change the actual distance. |
+| `speed_percent` | `float [0, 100]` | — | Available | Accepts any percentage from 0% through 100%, including decimal values. Use this as a relative speed request; no meters-per-second conversion is promised. |
+| `speed_level` | `int [0, 511]` | — | Available | Select one of 512 integer speed levels. Level 0 is the lowest moving-speed level and level 511 is the highest. |
+| `pace` | `enum {slow, normal, fast}` | — | Available | Named maximum-speed ratios: slow=20%, normal=40%, fast=80%. |
+| `step_count` | `int [1, 20]` | — | Development | Estimated steps; exact foot contacts are not available. |
+| `step_rate_hz` | `float [0.5, 3.0]` | `1.5` | Development | Estimated cadence only; the backend cannot command exact gait cadence. |
 <!-- END: Parameters -->
 
 <!-- START: Behavior -->
 ## Behavior
 
-The SDK applies the selected positive forward-speed profile for the requested duration, or for the estimated time associated with a distance request, and then issues a controlled stop. A zero-distance request produces no forward travel.
+Move forward using one positive speed-magnitude profile and a controlled stop.
 <!-- END: Behavior -->
 
 <!-- START: Return -->
 ## Return
 
-```python
-SkillResult(status, trace_id, error_code, message)
-```
-
-The result reports whether the request succeeded, was rejected, was interrupted, or timed out.
+The current website does not publish a more specific return schema for this Skill. Implementations must report success or rejection without changing the published input contract.
 <!-- END: Return -->
 
 <!-- START: Example -->
 ## Example
 
 ```python
+Agentech.forward(speed_mps=1.0, duration_s=1.0)
 Agentech.forward()
 Agentech.forward(speed_mps=0.4, duration_s=1.0)
 Agentech.forward(distance_m=1.0, speed_mps=0.4)
 Agentech.forward(speed_percent=40, duration_s=1.0)
 Agentech.forward(speed_level=100, duration_s=1.0)
-Agentech.forward(pace="slow", duration_s=1.0)    # 20% of maximum
-Agentech.forward(pace="normal", duration_s=1.0)  # 40% of maximum
-Agentech.forward(pace="fast", duration_s=1.0)    # 80% of maximum
+Agentech.forward(pace="normal", duration_s=1.0)
+Agentech.forward(step_count=6, step_rate_hz=1.5)
 ```
 <!-- END: Example -->
