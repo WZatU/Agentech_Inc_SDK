@@ -8,9 +8,9 @@
     "L1.0"
   ],
   "cards": {
-    "total": 13,
+    "total": 21,
     "L0.0": 1,
-    "L0.5": 12
+    "L0.5": 20
   },
   "packages": {
     "L0.0": "L0.0/",
@@ -52,10 +52,17 @@
     "unclassified": "Unclassify/"
   },
   "legacy": {
-    "status": "root_unclassify_pending_card_by_card_migration",
+    "status": "aegis_classified_unclassify_empty",
     "paths": [
       "Unclassify/En/",
       "Unclassify/Ch/"
     ]
+  },
+  "website_sync": {
+    "robot": "ff.aegis",
+    "source": "https://www.agent-tech.ai/agentech-products/eaic-hub/view-sdk",
+    "synchronized": "2026-07-16",
+    "skill_count": 21,
+    "bilingual_card_count": 42
   }
 }

@@ -1,122 +1,276 @@
 {
   "package": "L0.5",
   "layer": "L0.5",
-  "description": "Atomic bounded ZSL-1 movement, discrete-action, posture, and safety cards.",
+  "description": "Direct bounded Aegis movement, posture, and safety cards.",
   "structure": {
-    "status": "partially_classified",
+    "status": "classified",
     "path_base": "repository_root",
-    "paths": {
-      "classified": "L0.5/<robot>/<language>/<category>/",
-      "unclassified": "Unclassify/<language>/"
-    }
+    "card_path": "L0.5/ff.aegis/<language>/<category>/<card>.md"
+  },
+  "source": {
+    "robot": "ff.aegis",
+    "website": "https://www.agent-tech.ai/agentech-products/eaic-hub/view-sdk",
+    "synchronized": "2026-07-16"
   },
   "cards": [
     {
-      "id": "01_forward",
-      "function": "Agentech.forward",
+      "id": "forward",
+      "function": "Agentech.forward()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
         "en": "L0.5/ff.aegis/En/movement/01_forward.md",
         "ch": "L0.5/ff.aegis/Ch/movement/01_forward.md"
       }
     },
     {
-      "id": "02_backward",
-      "function": "Agentech.backward",
+      "id": "backward",
+      "function": "Agentech.backward()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
         "en": "L0.5/ff.aegis/En/movement/02_backward.md",
         "ch": "L0.5/ff.aegis/Ch/movement/02_backward.md"
       }
     },
     {
-      "id": "03_lateral",
-      "function": "Agentech.lateral",
+      "id": "lateral",
+      "function": "Agentech.lateral_left() / Agentech.lateral_right()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/03_lateral.md",
-        "ch": "Unclassify/Ch/03_lateral.md"
+        "en": "L0.5/ff.aegis/En/movement/03_lateral.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/03_lateral.md"
       }
     },
     {
-      "id": "04_turn",
-      "function": "Agentech.turn",
+      "id": "diagonal",
+      "function": "Agentech.diagonal()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/04_turn.md",
-        "ch": "Unclassify/Ch/04_turn.md"
+        "en": "L0.5/ff.aegis/En/movement/04_diagonal.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/04_diagonal.md"
       }
     },
     {
-      "id": "05_twist",
-      "function": "Agentech.twist",
+      "id": "squat_forward",
+      "function": "Agentech.squat_forward()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/05_twist.md",
-        "ch": "Unclassify/Ch/05_twist.md"
+        "en": "L0.5/ff.aegis/En/movement/05_squat_forward.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/05_squat_forward.md"
       }
     },
     {
-      "id": "06_backflip",
-      "function": "Agentech.backflip",
+      "id": "squat_backward",
+      "function": "Agentech.squat_backward()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/06_backflip.md",
-        "ch": "Unclassify/Ch/06_backflip.md"
+        "en": "L0.5/ff.aegis/En/movement/06_squat_backward.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/06_squat_backward.md"
       }
     },
     {
-      "id": "07_jump",
-      "function": "Agentech.jump",
+      "id": "squat_lateral",
+      "function": "Agentech.squat_lateral()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/07_jump.md",
-        "ch": "Unclassify/Ch/07_jump.md"
+        "en": "L0.5/ff.aegis/En/movement/07_squat_lateral.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/07_squat_lateral.md"
       }
     },
     {
-      "id": "08_stand",
-      "function": "Agentech.stand",
+      "id": "squat_diagonal",
+      "function": "Agentech.squat_diagonal()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/08_stand.md",
-        "ch": "Unclassify/Ch/08_stand.md"
+        "en": "L0.5/ff.aegis/En/movement/08_squat_diagonal.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/08_squat_diagonal.md"
       }
     },
     {
-      "id": "09_sit",
-      "function": "Agentech.sit",
+      "id": "turn",
+      "function": "Agentech.turn()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/09_sit.md",
-        "ch": "Unclassify/Ch/09_sit.md"
+        "en": "L0.5/ff.aegis/En/movement/09_turn.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/09_turn.md"
       }
     },
     {
-      "id": "10_stop",
-      "function": "Agentech.stop",
+      "id": "yaw",
+      "function": "Agentech.yaw()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "posture",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/10_stop.md",
-        "ch": "Unclassify/Ch/10_stop.md"
+        "en": "L0.5/ff.aegis/En/posture/10_yaw.md",
+        "ch": "L0.5/ff.aegis/Ch/posture/10_yaw.md"
       }
     },
     {
-      "id": "11_emergency_stop",
-      "function": "Agentech.emergency_stop",
+      "id": "pitch",
+      "function": "Agentech.pitch()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "posture",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/11_emergency_stop.md",
-        "ch": "Unclassify/Ch/11_emergency_stop.md"
+        "en": "L0.5/ff.aegis/En/posture/11_pitch.md",
+        "ch": "L0.5/ff.aegis/Ch/posture/11_pitch.md"
       }
     },
     {
-      "id": "12_look",
-      "function": "Agentech.look",
+      "id": "roll",
+      "function": "Agentech.roll()",
       "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "posture",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
       "paths": {
-        "en": "Unclassify/En/12_look.md",
-        "ch": "Unclassify/Ch/12_look.md"
+        "en": "L0.5/ff.aegis/En/posture/12_roll.md",
+        "ch": "L0.5/ff.aegis/Ch/posture/12_roll.md"
+      }
+    },
+    {
+      "id": "stay",
+      "function": "Agentech.stay(time=1.0)",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "posture",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/posture/13_stay.md",
+        "ch": "L0.5/ff.aegis/Ch/posture/13_stay.md"
+      }
+    },
+    {
+      "id": "backflip",
+      "function": "Agentech.backflip()",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/movement/14_backflip.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/14_backflip.md"
+      }
+    },
+    {
+      "id": "jump",
+      "function": "Agentech.jump()",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "movement",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/movement/15_jump.md",
+        "ch": "L0.5/ff.aegis/Ch/movement/15_jump.md"
+      }
+    },
+    {
+      "id": "stand",
+      "function": "Agentech.stand()",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "posture",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/posture/16_stand.md",
+        "ch": "L0.5/ff.aegis/Ch/posture/16_stand.md"
+      }
+    },
+    {
+      "id": "squat",
+      "function": "Agentech.squat()",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "posture",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/posture/17_squat.md",
+        "ch": "L0.5/ff.aegis/Ch/posture/17_squat.md"
+      }
+    },
+    {
+      "id": "sit",
+      "function": "Agentech.sit()",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "posture",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/posture/18_sit.md",
+        "ch": "L0.5/ff.aegis/Ch/posture/18_sit.md"
+      }
+    },
+    {
+      "id": "stop",
+      "function": "Agentech.stop()",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "safety",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/safety/19_stop.md",
+        "ch": "L0.5/ff.aegis/Ch/safety/19_stop.md"
+      }
+    },
+    {
+      "id": "emergency_stop",
+      "function": "Agentech.emergency_stop()",
+      "layer": "L0.5",
+      "robot": "ff.aegis",
+      "category": "safety",
+      "source": "EAIC HUB Aegis SDK",
+      "synchronized": "2026-07-16",
+      "paths": {
+        "en": "L0.5/ff.aegis/En/safety/20_emergency_stop.md",
+        "ch": "L0.5/ff.aegis/Ch/safety/20_emergency_stop.md"
       }
     }
   ]
