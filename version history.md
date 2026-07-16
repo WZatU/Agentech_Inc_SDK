@@ -1,5 +1,16 @@
 # Version History
 
+## 0.3.0 - 2026-07-13
+
+Bottom-level contract correction based on the Agibot ZSL-1 high-level SDK definitions.
+
+- Added `profiles/aegis/zsl1.yaml` as the single source for upstream motion and attitude ranges, coordinate signs, action methods, telemetry fields, return codes, control modes, and Agentech wrapper mappings.
+- Defined exact `speed_percent`, `speed_level`, and `pace` resolutions and required robot and simulator backends to share the same resolved command trace.
+- Kept previously designed step-count, gait, height, action-style, deceleration-mode, camera-target, and absolute posture-angle fields as explicit non-callable `TBD` entries instead of assigning unsupported values.
+- Mapped the existing `sit` wrapper only to normal `lieDown()` and kept it separate from the `passive()` emergency path; limited the executable `look` form to body pitch-rate control while preserving unresolved camera and angle forms as `TBD`.
+- Documented open-loop distance and angle formulas without presenting them as measured motion results.
+- Added automated consistency checks for bilingual card structure, manifests, parameter ranges, mappings, signs, and stale unsupported fields.
+
 ## 0.2.0 - 2026-07-08
 
 Structural cleanup for the SDK documentation repository.
