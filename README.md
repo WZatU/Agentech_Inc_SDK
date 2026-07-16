@@ -14,10 +14,6 @@ Agentech_SDK/
 ├── L0.0/
 ├── L0.5/
 ├── L1.0/
-├── L1.5/
-├── L2.0/
-├── L2.5/
-├── L3.0/
 ├── profiles/
 ├── scripts/
 └── manifest.json
@@ -46,10 +42,6 @@ L0.5/ff.navi/Ch/athletics/jump_forward.md
 | `L0.0` | Raw device, driver, or telemetry read without Agentech interpretation. |
 | `L0.5` | Direct bounded SDK action, state read, configuration call, image operation, transform lookup, or adapter call. |
 | `L1.0` | Narrow deterministic primitive with typed input/output and bounded side effects. |
-| `L1.5` | Reusable skill that composes primitives into a typed robot-level result. |
-| `L2.0` | Domain-level semantic decision using records, policy, evidence, adapters, or human review. |
-| `L2.5` | Execution-ready workflow, checklist, route package, or task bundle. |
-| `L3.0` | End-to-end customer or business mission with execution, validation, evidence, recovery, and final status. |
 
 Layer classification must be decided before robot and website-category
 placement.
@@ -96,7 +88,7 @@ a profile.
 ## Current Status
 
 - All 26 existing bilingual card files are in `Unclassify/`.
-- The seven SDK layer structures are ready for future classification.
+- The current SDK layer structures are `L0.0`, `L0.5`, and `L1.0`.
 - `ff.master` remains empty because testing has not started.
 - Only this root README is maintained.
 

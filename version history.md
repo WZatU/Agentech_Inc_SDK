@@ -19,7 +19,8 @@ Structural cleanup for the SDK documentation repository.
 - Removed generated aggregate surfaces: root `L0.5.md`, `docs/`, and all `collections/` directories.
 - Removed bilingual duplicate card files and kept only `en` and `zh` card sources.
 - Updated README and manifests so package indexes point only to canonical card locations.
-- Documented planned level sequence: `L0.0`, `L0.5`, `L1.0`, `L1.5`, `L2.0`, `L2.5`.
+- Documented the initial planned level sequence; future layers are deferred
+  until they enter the active development roadmap.
 
 ## 0.1.0 - Initial release
 
